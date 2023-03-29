@@ -7,10 +7,11 @@ const { videoValidator } = require("../middleware/validator/videoValidator");
 
 router
   .get("/videolist", videoController.videolist)
-  .get("/getvod", verifyToken, vodController.getvod)
+  .get("/video/:videoId", verifyToken(false), videoController.video)
+  .get("/getvod", verifyToken(), vodController.getvod)
   .post(
     "/createvideo",
-    verifyToken,
+    verifyToken(),
     videoValidator,
     videoController.createvideo
   );

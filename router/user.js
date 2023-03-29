@@ -9,11 +9,11 @@ const upload = multer({ dest: "public/" });
 router
   .post("/registers", validator.register, userController.register)
   .post("/logins", validator.login, userController.login)
-  .get("/lists", verifyToken, userController.list)
-  .put("/", verifyToken, validator.update, userController.update)
+  .get("/lists", verifyToken(), userController.list)
+  .put("/", verifyToken(), validator.update, userController.update)
   .post(
     "/headimg",
-    verifyToken,
+    verifyToken(),
     upload.single("headimg"),
     userController.headimg
   )
