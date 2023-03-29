@@ -8,6 +8,7 @@ router
   .post("/registers", validator.register, userController.register)
   .post("/logins", validator.login, userController.login)
   .get("/lists", verifyToken, userController.list)
+  .put("/", verifyToken, validator.update, userController.update)
   .delete("/", userController.delete);
 
 module.exports = router;

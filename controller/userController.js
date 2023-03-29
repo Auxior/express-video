@@ -24,6 +24,13 @@ exports.login = async (req, res) => {
   res.status(200).json(dbBack);
 };
 
+// 用户修改
+exports.update = async (req, res) => {
+  var id = req.user.userinfo._id;
+  var dbBack = await User.findByIdAndUpdate(id, req.body, { new: true });
+  res.status(202).json({ user: dbBack });
+};
+
 exports.list = async (req, res) => {
   console.log(req.user);
   res.send("/user-list");
