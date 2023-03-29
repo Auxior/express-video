@@ -16,4 +16,5 @@ main()
 
 module.exports = {
   User: mongoose.model("User", require("./userModel")),
+  Video: mongoose.model("Video", require("./videoModel")),
 };
