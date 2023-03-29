@@ -7,6 +7,7 @@ const multer = require("multer");
 const upload = multer({ dest: "public/" });
 
 router
+  .get("/getuser/:userId", verifyToken(false), userController.getuser)
   .get("/unsubscribe/:userId", verifyToken(), userController.unsubscribe)
   .get("/subscribe/:userId", verifyToken(), userController.subscribe)
   .post("/registers", validator.register, userController.register)

@@ -1,8 +1,36 @@
 const fs = require("fs");
 const { promisify } = require("util");
+const loadsh = require("loadsh");
 const { User, Subscribe } = require("../model/index");
 const { createToken } = require("../util/jwt");
 const rename = promisify(fs.rename);
+
+exports.getuser = async (req, res) => {
+  var isSubscribe = false;
+
+  if (req.user) {
+    const record = await Subscribe.findOne({
+      channel: req.params.userId,
+      user: req.user.userinfo._id,
+    });
+    if (record) {
+      isSubscribe = true;
+    }
+  }
+
+  const user = await User.findById(req.params.userId);
+  res.status(200).json({
+    ...loadsh.pick(user, [
+      "_id",
+      "username",
+      "image",
+      "subscribeCount",
+      "cover",
+      "channeldes",
+    ]),
+    isSubscribe,
+  });
+};
 
 exports.unsubscribe = async (req, res) => {
   const userId = req.user.userinfo._id;
