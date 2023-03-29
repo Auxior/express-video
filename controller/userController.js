@@ -5,6 +5,40 @@ const { User, Subscribe } = require("../model/index");
 const { createToken } = require("../util/jwt");
 const rename = promisify(fs.rename);
 
+exports.getchannel = async (req, res) => {
+  let channelList = await Subscribe.find({
+    channel: req.user.userinfo._id,
+  }).populate("user");
+  channelList = channelList.map((item) => {
+    return loadsh.pick(item.user, [
+      "_id",
+      "username",
+      "image",
+      "subscribeCount",
+      "cover",
+      "channeldes",
+    ]);
+  });
+  res.status(200).json(channelList);
+};
+
+exports.getsubscribe = async (req, res) => {
+  let subscribeList = await Subscribe.find({
+    user: req.params.userId,
+  }).populate("channel");
+  subscribeList = subscribeList.map((item) => {
+    return loadsh.pick(item.channel, [
+      "_id",
+      "username",
+      "image",
+      "subscribeCount",
+      "cover",
+      "channeldes",
+    ]);
+  });
+  res.status(200).json(subscribeList);
+};
+
 exports.getuser = async (req, res) => {
   var isSubscribe = false;
 
