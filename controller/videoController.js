@@ -1,5 +1,35 @@
 const { Video, Videocomment } = require("../model/index");
 
+exports.deletecomment = async (req, res) => {
+  const { videoId, commentId } = req.params;
+  const videoInfo = await Video.findById(videoId);
+  if (!videoInfo) {
+    return res.status(404).json({ err: "视频不存在" });
+  }
+  const comment = await Videocomment.findById(commentId);
+  if (!comment) {
+    return res.status(404).json({ err: "评论不存在" });
+  }
+  if (!comment.user.equals(req.user.userinfo._id)) {
+    return res.status(403).json({ err: "评论不可删除" });
+  }
+  await comment.deleteOne();
+  videoInfo.commentCount--;
+  await videoInfo.save();
+  res.status(200).json({ err: "删除成功" });
+};
+
+exports.commentlist = async (req, res) => {
+  const videoId = req.params.videoId;
+  const { pageNum = 1, pageSize = 10 } = req.body;
+  const comments = await Videocomment.find({ video: videoId })
+    .skip((pageNum - 1) * pageSize)
+    .limit(pageSize)
+    .populate("user", "_id username image");
+  const commentCount = await Videocomment.countDocuments({ video: videoId });
+  res.status(200).json({ comments, commentCount });
+};
+
 exports.comment = async (req, res) => {
   const { videoId } = req.params;
   const videoInfo = await Video.findById(videoId);
