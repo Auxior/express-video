@@ -27,6 +27,14 @@ const videoSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  likeCount: {
+    type: Number,
+    default: 0,
+  },
+  dislikeCount: {
+    type: Number,
+    default: 0,
+  },
   ...baseModel,
 });
 

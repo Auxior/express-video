@@ -6,6 +6,8 @@ const { verifyToken } = require("../util/jwt");
 const { videoValidator } = require("../middleware/validator/videoValidator");
 
 router
+  .get("/dislike/:videoId", verifyToken(), videoController.dislikevideo)
+  .get("/like/:videoId", verifyToken(), videoController.likevideo)
   .delete(
     "/comment/:videoId/:commentId",
     verifyToken(),
