@@ -20,4 +20,5 @@ module.exports = {
   Subscribe: mongoose.model("Subscribe", require("./subscribeModel")),
   Videocomment: mongoose.model("Videocomment", require("./videocommentModel")),
   Videolike: mongoose.model("Videolike", require("./videolikeModel")),
+  CollectModel: mongoose.model("CollectModel", require("./collectModel")),
 };

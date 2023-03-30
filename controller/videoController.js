@@ -1,4 +1,32 @@
-const { Video, Videocomment, Videolike, Subscribe } = require("../model/index");
+const {
+  Video,
+  Videocomment,
+  Videolike,
+  Subscribe,
+  CollectModel,
+} = require("../model/index");
+
+exports.collect = async (req, res) => {
+  const videoId = req.params.videoId;
+  const userId = req.user.userinfo._id;
+  const video = await Video.findById(videoId);
+  if (!video) {
+    return res.status(404).json({ err: "视频不存在" });
+  }
+  var doc = await CollectModel.findOne({
+    user: userId,
+    video: videoId,
+  });
+  if (doc) {
+    return res.status(403).json({ err: "视频已被收藏" });
+  }
+  const mycollect = await CollectModel({
+    user: userId,
+    video: videoId,
+  }).save();
+
+  res.status(201).json({ mycollect });
+};
 
 exports.likelist = async (req, res) => {
   const { pageNum = 1, pageSize = 10 } = req.body;
