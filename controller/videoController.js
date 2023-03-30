@@ -1,4 +1,21 @@
-const { Video, Videocomment, Videolike } = require("../model/index");
+const { Video, Videocomment, Videolike, Subscribe } = require("../model/index");
+
+exports.likelist = async (req, res) => {
+  const { pageNum = 1, pageSize = 10 } = req.body;
+  var likes = await Videolike.find({
+    like: 1,
+    user: req.user.userinfo._id,
+  })
+    .skip((pageNum - 1) * pageSize)
+    .limit(pageSize)
+    .populate("video", "_id title vodvideoId user");
+
+  var likeCount = await Videolike.countDocuments({
+    like: 1,
+    user: req.user.userinfo._id,
+  });
+  res.status(200).json({ likes, likeCount });
+};
 
 exports.dislikevideo = async (req, res) => {
   const videoId = req.params.videoId;
@@ -156,6 +173,25 @@ exports.video = async (req, res) => {
     "user",
     "_id username cover"
   );
+  videoInfo = videoInfo.toJSON();
+  videoInfo.islike = false;
+  videoInfo.isDislike = false;
+  videoInfo.isSubscribe = false;
+
+  if (req.user.userinfo) {
+    const userId = req.user.userinfo._id;
+    if (await Videolike.findOne({ user: userId, video: videoId, like: 1 })) {
+      videoInfo.islike = true;
+    }
+    if (await Videolike.findOne({ user: userId, video: videoId, like: -1 })) {
+      videoInfo.isDislike = true;
+    }
+    if (
+      await Subscribe.findOne({ user: userId, channel: videoInfo.user._id })
+    ) {
+      videoInfo.isSubscribe = true;
+    }
+  }
   res.status(200).json(videoInfo);
 };
 
