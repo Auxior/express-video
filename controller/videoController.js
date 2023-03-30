@@ -5,7 +5,14 @@ const {
   Subscribe,
   CollectModel,
 } = require("../model/index");
-const { hotInc } = require("../model/redis/redishotsinc");
+const { hotInc, topHots } = require("../model/redis/redishotsinc");
+
+exports.getHots = async (req, res) => {
+  var topnum = req.params.topnum;
+  var tops = await topHots(topnum);
+  res.status(200).json({ tops });
+};
+
 // 观看 +1 点赞 +2 评论 +2 收藏 +3
 
 exports.collect = async (req, res) => {
