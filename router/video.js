@@ -6,6 +6,7 @@ const { verifyToken } = require("../util/jwt");
 const { videoValidator } = require("../middleware/validator/videoValidator");
 
 router
+  .post("/comment/:videoId", verifyToken(), videoController.comment)
   .get("/videolist", videoController.videolist)
   .get("/video/:videoId", verifyToken(false), videoController.video)
   .get("/getvod", verifyToken(), vodController.getvod)
