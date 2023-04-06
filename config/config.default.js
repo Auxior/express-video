@@ -2,8 +2,11 @@
  * 默认配置
  */
 
-// JWT 加密值
+// JWT 密钥
 module.exports.uuid = "94199183-8561-4e47-a161-8a4f0244b9ec";
+
+// token 过期时间
+module.exports.time = 60 * 60 * 24;
 
 // MongoDB
 module.exports.mongopath = "mongodb://127.0.0.1:27017/express-video";

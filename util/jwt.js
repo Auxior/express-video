@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { uuid } = require("../config/config.default");
+const { uuid, time } = require("../config/config.default");
 const { promisify } = require("util");
 const tojwt = promisify(jwt.sign);
 const verify = promisify(jwt.verify);
@@ -25,6 +25,6 @@ module.exports.verifyToken = function (required = true) {
 };
 
 module.exports.createToken = async (userinfo) => {
-  const token = await tojwt({ userinfo }, uuid, { expiresIn: 60 * 60 * 24 });
+  const token = await tojwt({ userinfo }, uuid, { expiresIn: time });
   return token;
 };
