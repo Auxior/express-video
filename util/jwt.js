@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
-const { promisify } = require("util");
 const { uuid } = require("../config/config.default");
+const { promisify } = require("util");
 const tojwt = promisify(jwt.sign);
 const verify = promisify(jwt.verify);
 
 module.exports.verifyToken = function (required = true) {
   return async (req, res, next) => {
-    var token = req.headers.authorization;
+    let token = req.headers.authorization;
     token = token ? token.split("Bearer ")[1] : null;
     if (token) {
       try {
@@ -14,7 +14,7 @@ module.exports.verifyToken = function (required = true) {
         req.user = userinfo;
         next();
       } catch (error) {
-        res.status(402).json({ error: "无效的token" });
+        res.status(402).json({ error: "token无效" });
       }
     } else if (required) {
       res.status(402).json({ error: "请传入token" });
@@ -25,6 +25,6 @@ module.exports.verifyToken = function (required = true) {
 };
 
 module.exports.createToken = async (userinfo) => {
-  var token = await tojwt({ userinfo }, uuid, { expiresIn: 60 * 60 * 24 });
+  const token = await tojwt({ userinfo }, uuid, { expiresIn: 60 * 60 * 24 });
   return token;
 };

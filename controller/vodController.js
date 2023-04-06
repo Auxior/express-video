@@ -1,9 +1,13 @@
+const {
+  regionId,
+  accessKeyId,
+  accessKeySecret,
+} = require("../config/config.default");
+
 var RPCClient = require("@alicloud/pop-core").RPCClient;
 
-function initVodClient(accessKeyId, accessKeySecret) {
-  var regionId = "cn-shanghai"; // 点播服务接入地域
+function initVodClient() {
   var client = new RPCClient({
-    //填入AccessKey信息
     accessKeyId: accessKeyId,
     accessKeySecret: accessKeySecret,
     endpoint: "http://vod." + regionId + ".aliyuncs.com",
@@ -14,7 +18,7 @@ function initVodClient(accessKeyId, accessKeySecret) {
 }
 
 exports.getvod = async (req, res) => {
-  var client = initVodClient("<Your AccessKeyId>", "<Your AccessKeySecret>");
+  var client = initVodClient();
 
   const vodback = await client.request(
     "CreateUploadVideo",

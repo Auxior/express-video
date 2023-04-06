@@ -1,27 +1,29 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controller/userController");
-const validator = require("../middleware/validator/userValidator");
 const { verifyToken } = require("../util/jwt");
+const {
+  registerValidator,
+  loginValidator,
+  updateValidator,
+} = require("../middleware/validator/userValidator");
 const multer = require("multer");
 const upload = multer({ dest: "public/" });
 
 router
+  .post("/register", registerValidator, userController.register)
+  .post("/login", loginValidator, userController.login)
+  .put("/update", verifyToken(), updateValidator, userController.update)
+  .post(
+    "/avatar",
+    verifyToken(),
+    upload.single("avatar"),
+    userController.avatar
+  )
+  .get("/subscribe/:userId", verifyToken(), userController.subscribe)
+  .get("/unsubscribe/:userId", verifyToken(), userController.unsubscribe)
   .get("/getchannel", verifyToken(), userController.getchannel)
   .get("/getsubscribe/:userId", userController.getsubscribe)
-  .get("/getuser/:userId", verifyToken(false), userController.getuser)
-  .get("/unsubscribe/:userId", verifyToken(), userController.unsubscribe)
-  .get("/subscribe/:userId", verifyToken(), userController.subscribe)
-  .post("/registers", validator.register, userController.register)
-  .post("/logins", validator.login, userController.login)
-  .get("/lists", verifyToken(), userController.list)
-  .put("/", verifyToken(), validator.update, userController.update)
-  .post(
-    "/headimg",
-    verifyToken(),
-    upload.single("headimg"),
-    userController.headimg
-  )
-  .delete("/", userController.delete);
+  .get("/getuser/:userId", verifyToken(false), userController.getuser);
 
 module.exports = router;

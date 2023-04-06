@@ -6,7 +6,7 @@ async function main() {
 }
 
 main()
-  .then((res) => {
+  .then(() => {
     console.log("mongo链接成功");
   })
   .catch((err) => {
@@ -20,5 +20,5 @@ module.exports = {
   Subscribe: mongoose.model("Subscribe", require("./subscribeModel")),
   Videocomment: mongoose.model("Videocomment", require("./videocommentModel")),
   Videolike: mongoose.model("Videolike", require("./videolikeModel")),
-  CollectModel: mongoose.model("CollectModel", require("./collectModel")),
+  Collect: mongoose.model("Collect", require("./collectModel")),
 };
